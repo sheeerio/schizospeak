@@ -1,0 +1,17 @@
+let foo = 9 * 5;
+
+print(foo, 132)
+const timeNow = time();
+print(timeNow)
+
+
+fn makeAdder(offset) {
+    fn add(x, y) {
+        x + y + offset
+    }
+
+    add
+}
+
+const adder = makeAdder(5);
+print(adder(10, 5))
