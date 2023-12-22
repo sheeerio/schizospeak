@@ -8,6 +8,7 @@ export enum TokenType {
     BinaryOp,
     Fn,
     Dot,
+    Quote,
     Comma, 
     Colon,
     OpenBrace,      // {
@@ -82,6 +83,12 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Dot));
         else if (src[0] == ':')
             tokens.push(token(src.shift(), TokenType.Colon));
+        else if (src[0] == '"') {
+            tokens.push(token(src.shift(), TokenType.Quote));
+            while (src[0] !== '"')
+                tokens.push(token(src.shift(), TokenType.String));
+            tokens.push(token(src.shift(), TokenType.Quote));
+        }
         else {
             // Handle mutlicharacter tokens
             

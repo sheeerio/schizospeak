@@ -1,3 +1,4 @@
+import { printValues } from "./eval/native-fns.ts";
 import { MK_BOOL, MK_NULL, MK_NATIVE_FN, RuntimeVal, MK_NUMBER } from "./values.ts";
 
 export function createGlobalEnv() {
@@ -10,8 +11,8 @@ export function createGlobalEnv() {
     // define a native methods
     env.declareVar(
         "print", 
-        MK_NATIVE_FN((args, scope) => {
-            console.log(...args);
+        MK_NATIVE_FN((args) => {
+            printValues(args);
             return MK_NULL();
         }), 
         true

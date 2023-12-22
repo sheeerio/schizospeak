@@ -7,6 +7,7 @@ import {
     Identifier,
     MemberExpr,
     NumericLiteral,
+    StringLiteral,
     ObjectLiteral,
     Program,
     Property,
@@ -169,7 +170,7 @@ import {
     private parse_object_expr(): Expr {
         // { Prop[] }
         if (this.at().type !== TokenType.OpenBrace) {
-        return this.parse_additive_expr();
+            return this.parse_additive_expr();
         }
 
         this.eat(); // advance past open brace.
@@ -178,7 +179,7 @@ import {
         while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
         const key = this.expect(
             TokenType.Identifier,
-            "Object literal key exprected"
+            "Object literal key expected"
         ).value;
 
         // Allows shorthand key: pair -> { key, }
@@ -217,6 +218,9 @@ import {
 
     // Handle Addition & Subtraction Operations
     private parse_additive_expr(): Expr {
+        if (this.at().type == TokenType.Quote) {
+            return this.parse_string_expr();
+        }
         let left = this.parse_multiplicitave_expr();
 
         while (this.at().value == "+" || this.at().value == "-") {
@@ -231,6 +235,18 @@ import {
         }
 
         return left;
+    }
+
+
+    private parse_string_expr(): Expr {
+        this.eat(); // advance past the first quotation
+        let str = "";
+        while (this.at().type !== TokenType.Quote) {
+            str += this.eat().value;
+        }
+        this.eat(); // advance past the second quotation
+
+        return {kind: "StringLiteral", value: str} as StringLiteral;        
     }
 
     // Handle Multiplication, Division & Modulo Operations
@@ -369,6 +385,12 @@ import {
             kind: "NumericLiteral",
             value: parseFloat(this.eat().value),
             } as NumericLiteral;
+        
+        case TokenType.String:
+            return {
+                kind: "StringLiteral",
+                value: this.eat().value,
+            } as StringLiteral;
 
         // Grouping Expressions
         case TokenType.OpenParen: {

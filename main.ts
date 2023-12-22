@@ -4,8 +4,8 @@ import Environment, { createGlobalEnv } from "./runtime/environment.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 import { MK_NULL, MK_BOOL } from "./runtime/values.ts";
 
-// repl();
-run("./test.txt");
+repl();
+// run("./test.txt");
 
 async function run(filename: string) {
     const parser = new Parser();
@@ -14,7 +14,7 @@ async function run(filename: string) {
     const input = await Deno.readTextFile(filename);
     const program = parser.produceAST(input);
     const result = evaluate(program, env);
-    // console.log(result);
+    console.log(result);
 }
 
 function repl () {
