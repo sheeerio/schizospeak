@@ -7,6 +7,21 @@ export enum TokenType {
     Equals,
     BinaryOp,
     Fn,
+    Let,
+    Const,
+    If,
+    Else,
+    For,
+    While,
+    Greater,
+    Lesser,
+    EqualsCompare,
+    NotEqualsCompare,
+    GreaterEqual,
+    LesserEqual,
+    Exclamation,
+    And,
+    Bar,
     Dot,
     Quote,
     Comma, 
@@ -17,8 +32,6 @@ export enum TokenType {
     CloseParen,     // )
     OpenBracket,    // [
     CloseBracket,   // ]
-    Let,
-    Const,
     Semicolon,
     EOF,
 }
@@ -27,6 +40,10 @@ const KEYWORDS: Record<string, TokenType> = {
     let: TokenType.Let,
     const: TokenType.Const,
     fn: TokenType.Fn,
+    if: TokenType.If,
+    else: TokenType.Else,
+    for: TokenType.For,
+    while: TokenType.While,
 }
 
 export interface Token {
@@ -41,6 +58,7 @@ function token(value = "", type: TokenType): Token {
 function isskippable(str: string) {
     return str == ' ' || str == '\n' || str == '\t' || str == '\r';
 }
+
 
 function isalpha(src: string) {
     return src.toUpperCase() != src.toLowerCase();
@@ -73,8 +91,15 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') 
             tokens.push(token(src.shift(), TokenType.BinaryOp));
-        else if (src[0] == '=')
-            tokens.push(token(src.shift(), TokenType.Equals));
+        else if (src[0] == '=') {
+            src.shift()
+            if (src[0] == '=') {
+                src.shift()
+                tokens.push(token('==', TokenType.EqualsCompare));
+            } else {
+                tokens.push(token("=", TokenType.Equals));
+            }
+        }
         else if (src[0] == ';')
             tokens.push(token(src.shift(), TokenType.Semicolon));
         else if (src[0] == ',')
@@ -83,13 +108,41 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Dot));
         else if (src[0] == ':')
             tokens.push(token(src.shift(), TokenType.Colon));
+        else if (src[0] == '>') {
+            src.shift();
+            if (String(src[0]) == '=') {
+                src.shift()
+                tokens.push(token(">=", TokenType.GreaterEqual));
+            } else {
+                tokens.push(token(">", TokenType.Greater));
+            }
+        }
+        else if (src[0] == '<') {
+            src.shift();
+            if (String(src[0]) == '=') {
+                src.shift()
+                tokens.push(token("<=", TokenType.LesserEqual));
+            } else {
+                tokens.push(token("<", TokenType.Lesser));
+            }
+        }
+        else if (src[0] == '!') {
+            src.shift();
+            if (String(src[0]) == '=') {
+                src.shift()
+                tokens.push(token("!=", TokenType.NotEqualsCompare));
+            } else {
+                tokens.push(token("!", TokenType.Exclamation));
+            }
+        }
+        else if (src[0] == '|')
+            tokens.push(token(src.shift(), TokenType.Bar));
         else if (src[0] == '"') {
             tokens.push(token(src.shift(), TokenType.Quote));
             while (src[0] !== '"')
                 tokens.push(token(src.shift(), TokenType.String));
             tokens.push(token(src.shift(), TokenType.Quote));
-        }
-        else {
+        } else {
             // Handle mutlicharacter tokens
             
             // numbers

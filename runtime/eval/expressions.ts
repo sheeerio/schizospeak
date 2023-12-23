@@ -1,7 +1,7 @@
 import { AssignmentExpr, BinaryExpr, CallExpr, Identifier, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { RuntimeVal, NumberVal, MK_NULL, ObjectVal, NativeFnValue, FunctionValue } from "../values.ts";
+import { RuntimeVal, NumberVal, MK_NULL, ObjectVal, NativeFnValue, FunctionValue, BoolVal, MK_BOOL, MK_NUMBER, StringVal, NullVal } from "../values.ts";
 
 export function eval_binary_expr(
     binop: BinaryExpr, 
@@ -17,26 +17,77 @@ export function eval_binary_expr(
     return MK_NULL();
 }
 
-function eval_numeric_binary_expr(
-    lhs: NumberVal, 
-    rhs: NumberVal, 
-    operator: string
-    ): NumberVal {
-    let result: number;
-    if (operator == "+")
-        result = lhs.value + rhs.value;
-    else if (operator == "-")
-        result = lhs.value - rhs.value;
-    else if (operator == "*")
-        result = lhs.value * rhs.value;
-    else if (operator == "/")
-        // TODO: Division by zero checks
-        result = lhs.value / rhs.value;
-    else {
-        result = lhs.value % rhs.value;
+export function eval_numeric_binary_expr(lhs: RuntimeVal, rhs: RuntimeVal, operator: string): RuntimeVal {
+
+    if (operator === '!=') {
+        return equals(lhs, rhs, false);
+    } else if (operator === '==') {
+        return equals(lhs, rhs, true);
+    } else if (operator === '&&') {
+        return equals(lhs, rhs, true);
+    } else if (operator === '<=') {
+        const llhs = lhs as BoolVal;
+        const rrhs = rhs as BoolVal;
+        return MK_BOOL(llhs.value <= rrhs.value);
+    } else if (operator === '>=') {
+        const llhs = lhs as BoolVal;
+        const rrhs = rhs as BoolVal;
+        return MK_BOOL(llhs.value >= rrhs.value);
+    } else if (operator === '|') {
+        const llhs = lhs as BoolVal;
+        const rrhs = rhs as BoolVal;
+
+        return MK_BOOL(llhs.value || rrhs.value);
+    } else if (lhs.type === 'number' && rhs.type === 'number') {
+        const llhs = lhs as NumberVal;
+        const rrhs = rhs as NumberVal;
+
+        switch (operator) {
+            case "+":
+                return MK_NUMBER(llhs.value + rrhs.value);
+            case "-":
+                return MK_NUMBER(llhs.value - rrhs.value);
+            case "*":
+                return MK_NUMBER(llhs.value * rrhs.value);
+            case "/":
+                return MK_NUMBER(llhs.value / rrhs.value);
+            case "%":
+                return MK_NUMBER(llhs.value % rrhs.value);
+            case "<":
+                return MK_BOOL(llhs.value < rrhs.value);
+            case ">":
+                return MK_BOOL(llhs.value > rrhs.value);
+            default:
+                throw `Unknown operator provided in operation: ${lhs}, ${rhs}.`
+        }
+    } else {
+        return MK_NULL()
     }
-    return { value: result, type: "number"} as NumberVal;
 }
+
+function equals(lhs: RuntimeVal, rhs: RuntimeVal, strict: boolean): RuntimeVal {
+    const compare = strict ? (a: any, b: any) => a === b : (a: any, b: any) => a !== b;
+
+    switch (lhs.type) {
+        case 'boolean':
+            return MK_BOOL(compare((lhs as BoolVal).value, (rhs as BoolVal).value));
+        case 'number':
+            return MK_BOOL(compare((lhs as NumberVal).value, (rhs as NumberVal).value));
+        case 'string':
+            return MK_BOOL(compare((lhs as StringVal).value, (rhs as StringVal).value));
+        case 'function':
+            return MK_BOOL(compare((lhs as FunctionValue).body, (rhs as FunctionValue).body));
+        case 'native-fn':
+            return MK_BOOL(compare((lhs as NativeFnValue).call, (rhs as NativeFnValue).call));
+        case 'null':
+            return MK_BOOL(compare((lhs as NullVal).value, (rhs as NullVal).value));
+        case 'object':
+            return MK_BOOL(compare((lhs as ObjectVal).properties, (rhs as ObjectVal).properties));
+        default:
+            throw `RunTime: Unhandled type in equals function: ${lhs}, ${rhs}`
+    }
+}
+
 
 export function eval_identifier(
     ident: Identifier, 

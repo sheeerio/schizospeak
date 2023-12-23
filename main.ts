@@ -29,7 +29,7 @@ function repl () {
         // Check for no user input or exit keyword
         if (!input) {
             Deno.exit(1);
-        } else if (input.includes("exit")) {
+        } else if (input == "exit") {
             Deno.exit(0);
         }
 

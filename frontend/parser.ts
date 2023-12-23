@@ -223,15 +223,13 @@ import {
         }
         let left = this.parse_multiplicitave_expr();
 
-        while (this.at().value == "+" || this.at().value == "-") {
-        const operator = this.eat().value;
-        const right = this.parse_multiplicitave_expr();
-        left = {
-            kind: "BinaryExpr",
-            left,
-            right,
-            operator,
-        } as BinaryExpr;
+        while (["+", "-", "==", "!=", "<", ">", "<=", ">="].includes(this.at().value)) {
+            const operator = this.eat().value;
+            const right = this.parse_multiplicitave_expr();
+            left = {
+                kind: "BinaryExpr",
+                left, right, operator
+            } as BinaryExpr
         }
 
         return left;
