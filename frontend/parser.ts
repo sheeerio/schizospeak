@@ -13,7 +13,8 @@ import {
     Property,
     Stmt,
     VarDeclaration,
-    FunctionDeclaration
+    FunctionDeclaration,
+    IfDeclaration
   } from "./ast.ts";
   
   import { Token, tokenize, TokenType } from "./lexer.ts";
@@ -68,9 +69,64 @@ import {
             return this.parse_var_declaration();
         case TokenType.Fn:
             return this.parse_function_declaration();
+        case TokenType.If:
+            return this.parse_if_declaration();
+        case TokenType.While:
+            return this.parse_while_declaration();
         default:
             return this.parse_expr();
         }
+    }
+    
+    parse_block_statement(): Stmt[] {
+        this.expect(TokenType.OpenBrace, "Opening brace (\"{\") expected while parsing code block.");
+
+        const body: Stmt[] = [];
+
+        while (this.not_eof() && this.at().type !== TokenType.CloseBrace) {
+            const stmt = this.parse_stmt();
+            body.push(stmt);
+        }
+
+        this.expect(TokenType.CloseBrace, "Closing brace (\"}\") expected while parsing code block.");
+
+        return body;
+    }
+    
+    parse_while_declaration(): Stmt {
+      throw new Error("Method not implemented.");
+    }
+
+    parse_if_declaration(): Stmt {
+        this.eat();
+        this.expect(TokenType.OpenParen, "Expected open parenthesis (\"(\") expected following \"if\" keyword.");
+        const cond = this.parse_expr();
+        this.expect(TokenType.CloseParen, "Closing parenthesis (\"(\") expected following \"if\" statement.");
+        const body = this.parse_block_statement();
+
+        let alternate: Stmt[];
+        if (this.at().type == TokenType.Else) {
+            this.eat(); // eat "else"
+
+            if (this.at().type == TokenType.If) {
+                alternate = [this.parse_if_declaration()];
+            } else {
+                alternate = this.parse_block_statement();
+            }
+            return {
+                kind: 'IfDeclaration',
+                body,
+                cond,
+                alt: alternate
+            } as IfDeclaration;
+        }
+
+        return {
+            kind: 'IfDeclaration',
+            body,
+            cond
+        } as IfDeclaration;
+        
     }
 
     parse_function_declaration(): Stmt {
@@ -116,7 +172,7 @@ import {
         if (this.at().type == TokenType.Semicolon) {
         this.eat(); // expect semicolon
         if (isConstant) {
-            throw "Must assigne value to constant expression. No value provided.";
+            throw "Must assign value to constant expression. No value provided.";
         }
 
         return {
@@ -155,13 +211,13 @@ import {
         const left = this.parse_object_expr();
 
         if (this.at().type == TokenType.Equals) {
-        this.eat(); // advance past equals
-        const value = this.parse_assignment_expr();
-        return {
-            value,
-            assigne: left,
-            kind: "AssignmentExpr",
-        } as AssignmentExpr;
+            this.eat(); // advance past equals
+            const value = this.parse_assignment_expr();
+            return {
+                value,
+                assigne: left,
+                kind: "AssignmentExpr",
+            } as AssignmentExpr;
         }
 
         return left;

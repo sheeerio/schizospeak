@@ -92,12 +92,18 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%') 
             tokens.push(token(src.shift(), TokenType.BinaryOp));
         else if (src[0] == '=') {
-            src.shift()
+            src.shift();
             if (src[0] == '=') {
-                src.shift()
                 tokens.push(token('==', TokenType.EqualsCompare));
-            } else {
+                src.shift();
+            } else if (src[0] == " ") {
+                while (src[0] == " ") src.shift();
                 tokens.push(token("=", TokenType.Equals));
+                if (src[0] == "-") {
+                    tokens.push(token("0", TokenType.Number));
+                    tokens.push(token("-", TokenType.BinaryOp));
+                    src.shift();
+                } 
             }
         }
         else if (src[0] == ';')
