@@ -1,5 +1,6 @@
+import { MemberExpr, Identifier } from "../frontend/ast.ts";
 import { printValues } from "./eval/native-fns.ts";
-import { MK_BOOL, MK_NULL, MK_NATIVE_FN, RuntimeVal, MK_NUMBER } from "./values.ts";
+import { MK_BOOL, MK_NULL, MK_NATIVE_FN, RuntimeVal, MK_NUMBER, ObjectVal } from "./values.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -35,6 +36,26 @@ export default class Environment {
         this.parent = parentENV;
         this.variables = new Map();
         this.constants = new Set();
+    }
+
+    public lookupOrMutObject(expr: MemberExpr, value?: RuntimeVal, property?: Identifier): RuntimeVal {
+        if (expr.object.kind === 'MemberExpr') return this.lookupOrMutObject(expr.object as MemberExpr, value, expr.property as Identifier);
+
+        const varname = (expr.object as Identifier).symbol;
+        const env = this.resolve(varname);
+
+        let pastVal = env.variables.get(varname) as ObjectVal;
+
+        const prop = property
+            ? property.symbol
+            : (expr.property as Identifier).symbol;
+        const currentProp = (expr.property as Identifier).symbol;
+
+        if (value) pastVal.properties.set(prop, value);
+
+        if (currentProp) pastVal = (pastVal.properties.get(currentProp) as ObjectVal);
+
+        return pastVal;
     }
 
     public declareVar(

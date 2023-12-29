@@ -1,4 +1,4 @@
-import { AssignmentExpr, BinaryExpr, CallExpr, Identifier, ObjectLiteral } from "../../frontend/ast.ts";
+import { AssignmentExpr, BinaryExpr, CallExpr, Identifier, MemberExpr, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { RuntimeVal, NumberVal, MK_NULL, ObjectVal, NativeFnValue, FunctionValue, BoolVal, MK_BOOL, MK_NUMBER, StringVal, NullVal } from "../values.ts";
@@ -97,15 +97,12 @@ export function eval_identifier(
     return val;
 }
 
-export function eval_assignments(
-    node: AssignmentExpr, 
-    env: Environment
-    ): RuntimeVal {
-    if (node.assigne.kind !== "Identifier") {
-        throw `Invalid LHS inside expression ${JSON.stringify(node.assigne)}`;
-    }
-    
+export function eval_assignment(node: AssignmentExpr, env: Environment): RuntimeVal {
+    if (node.assigne.kind === "MemberExpr") return eval_member_expr(env, node);
+    if (node.assigne.kind !== "Identifier") throw `Invalid left-hand-side expression: ${JSON.stringify(node.assigne)}.`;
+
     const varname = (node.assigne as Identifier).symbol;
+
     return env.assignVar(varname, evaluate(node.value, env));
 }
 
@@ -156,4 +153,18 @@ export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
     }
 
     throw "Cannot call value that is not a function: " + JSON.stringify(fn);
+}
+
+export function eval_member_expr(env: Environment, node?: AssignmentExpr, expr?: MemberExpr): RuntimeVal {
+    if (expr) {
+        const variable = env.lookupOrMutObject(expr);
+
+        return variable;
+    } else if (node) {
+        const variable = env.lookupOrMutObject(node.assigne as MemberExpr, evaluate(node.value, env));
+
+        return variable;
+    } else {
+        throw `Evaluating a member expression is not possible without a member or assignment expression.`
+    }
 }

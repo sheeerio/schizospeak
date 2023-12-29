@@ -1,7 +1,8 @@
-import { FunctionDeclaration, IfDeclaration, Program, Stmt, VarDeclaration } from "../../frontend/ast.ts";
+import { ForDeclaration, FunctionDeclaration, IfDeclaration, Program, Stmt, VarDeclaration } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { RuntimeVal, MK_NULL, FunctionValue, BoolVal } from "../values.ts";
+import { eval_assignment } from "./expressions.ts";
 
 export function eval_program(program: Program, env: Environment): RuntimeVal {
     let lastEvaluated: RuntimeVal = MK_NULL();
@@ -50,6 +51,28 @@ export function eval_if_declaration(declaration: IfDeclaration, env: Environment
     } else {
         return MK_NULL();
     }
+}
+
+export function eval_for_declaration(declaration: ForDeclaration, env: Environment): RuntimeVal {
+    env = new Environment(env);
+
+    eval_var_declaration(declaration.init, env);
+
+    const body = declaration.body;
+    const step = declaration.step;
+
+    let cond = evaluate(declaration.cond, env);
+
+    if ((cond as BoolVal).value !== true) return MK_NULL(); // The loop didn't start
+
+    do {
+        eval_assignment(step, env);
+        eval_body(body, new Environment(env), false);
+
+        cond = evaluate(declaration.cond, env);
+    } while ((cond as BoolVal).value);
+
+    return MK_NULL();
 }
 
 function eval_body(body: Stmt[], env: Environment, newEnv = true): RuntimeVal {

@@ -14,7 +14,8 @@ import {
     Stmt,
     VarDeclaration,
     FunctionDeclaration,
-    IfDeclaration
+    IfDeclaration,
+    ForDeclaration
   } from "./ast.ts";
   
   import { Token, tokenize, TokenType } from "./lexer.ts";
@@ -73,9 +74,30 @@ import {
             return this.parse_if_declaration();
         case TokenType.While:
             return this.parse_while_declaration();
+        case TokenType.For:
+            return this.parse_for_declaration();
         default:
             return this.parse_expr();
         }
+    }
+
+    parse_for_declaration(): Stmt {
+        this.eat();
+        this.expect(TokenType.OpenParen, "Expected open parenthesis (\"(\") expected following \"for\" keyword.");
+        const init = this.parse_var_declaration();
+        const cond = this.parse_expr();
+        this.expect(TokenType.Semicolon, "Expected semicolon after initialization in \"for\" declaration");
+        const step = this.parse_assignment_expr();
+        this.expect(TokenType.CloseParen, "Closing parenthesis (\"(\") expected following \"for\" statement.");
+        const body = this.parse_block_statement();
+
+        return {
+            kind: "ForDeclaration", 
+            init, 
+            cond, 
+            step, 
+            body,
+        } as ForDeclaration;
     }
     
     parse_block_statement(): Stmt[] {

@@ -38,3 +38,8 @@ if (x > 0) {
 } else {
     print("x is negative")
 }
+
+
+for (let i = 0; i < 4; i = i + 1) {
+    print(i)
+}

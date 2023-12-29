@@ -1,8 +1,8 @@
 import {NumberVal, RuntimeVal, StringVal} from "./values.ts"
-import {AssignmentExpr, BinaryExpr, CallExpr, FunctionDeclaration, Identifier, IfDeclaration, NumericLiteral, ObjectLiteral, Program, Stmt, StringLiteral, VarDeclaration} from "../frontend/ast.ts"
+import {AssignmentExpr, BinaryExpr, CallExpr, ForDeclaration, FunctionDeclaration, Identifier, IfDeclaration, NumericLiteral, ObjectLiteral, Program, Stmt, StringLiteral, VarDeclaration} from "../frontend/ast.ts"
 import Environment from "./environment.ts";
-import { eval_identifier, eval_binary_expr, eval_assignments, eval_object_expr, eval_call_expr } from "./eval/expressions.ts";
-import { eval_function_declaration, eval_if_declaration, eval_program, eval_var_declaration } from "./eval/statements.ts";
+import { eval_identifier, eval_binary_expr, eval_assignment, eval_object_expr, eval_call_expr } from "./eval/expressions.ts";
+import { eval_for_declaration, eval_function_declaration, eval_if_declaration, eval_program, eval_var_declaration } from "./eval/statements.ts";
 
 
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
@@ -24,7 +24,7 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
         case "CallExpr":
                 return eval_call_expr(astNode as CallExpr, env);
         case "AssignmentExpr":
-            return eval_assignments(astNode as AssignmentExpr, env);
+            return eval_assignment(astNode as AssignmentExpr, env);
         case "BinaryExpr":
             return eval_binary_expr(astNode as BinaryExpr, env);
         case "Program":
@@ -35,6 +35,8 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
             return eval_function_declaration(astNode as FunctionDeclaration, env);
         case "IfDeclaration":
             return eval_if_declaration(astNode as IfDeclaration, env);
+        case "ForDeclaration":
+            return eval_for_declaration(astNode as ForDeclaration, env);
         default:
             console.error("This AST Node has not yet been setup for interpretation.", astNode);
             Deno.exit(1);       
