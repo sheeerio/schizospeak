@@ -1,7 +1,7 @@
 # Schizospeak
 > Schizospeak is an ongoing project
 
-Schizospeak is an interface to create esoteric programming languages such as (LOLCODE)[https://en.wikipedia.org/wiki/LOLCODE] and (Shakespeare)[https://en.wikipedia.org/wiki/Shakespeare_Programming_Language].
+Schizospeak is an interface to create esoteric programming languages such as [LOLCODE](https://en.wikipedia.org/wiki/LOLCODE) and [Shakespeare](https://en.wikipedia.org/wiki/Shakespeare_Programming_Language).
 Currently, all syntactical rules are due for changes. Lexical morphology is a low priorty as that only includes replacement of current words with the new semantics.
 
 ## Components
