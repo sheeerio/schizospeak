@@ -98,7 +98,7 @@ export function eval_identifier(
 }
 
 export function eval_assignment(node: AssignmentExpr, env: Environment): RuntimeVal {
-    if (node.assigne.kind === "MemberExpr") return eval_member_expr(env, node);
+    if (node.assigne.kind === "MemberExpr") return eval_member_expr(env, undefined, node);
     if (node.assigne.kind !== "Identifier") throw `Invalid left-hand-side expression: ${JSON.stringify(node.assigne)}.`;
 
     const varname = (node.assigne as Identifier).symbol;
@@ -155,13 +155,16 @@ export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
     throw "Cannot call value that is not a function: " + JSON.stringify(fn);
 }
 
-export function eval_member_expr(env: Environment, node?: AssignmentExpr, expr?: MemberExpr): RuntimeVal {
+export function eval_member_expr(env: Environment, expr?: MemberExpr, node?: AssignmentExpr): RuntimeVal {
     if (expr) {
         const variable = env.lookupOrMutObject(expr);
 
         return variable;
     } else if (node) {
-        const variable = env.lookupOrMutObject(node.assigne as MemberExpr, evaluate(node.value, env));
+        const variable = env.lookupOrMutObject(
+            node.assigne as MemberExpr, 
+            evaluate(node.value, env)
+            );
 
         return variable;
     } else {

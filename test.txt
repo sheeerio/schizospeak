@@ -8,6 +8,7 @@ const obj = {
     },
 };
 
+print(obj.complex.bar)
 
 print(foo, 132)
 const timeNow = time();
