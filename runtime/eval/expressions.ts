@@ -12,9 +12,25 @@ export function eval_binary_expr(
 
     if (lhs.type == "number" && rhs.type == "number") 
         return eval_numeric_binary_expr(lhs as NumberVal, rhs as NumberVal, binop.operator);
-
+    else if (lhs.type == "boolean" && rhs.type == "boolean")
+        return eval_bool_binary_expr(lhs, rhs, binop.operator)
     // One or both are null
     return MK_NULL();
+}
+
+export function eval_bool_binary_expr(lhs: RuntimeVal, rhs: RuntimeVal, operator: string): RuntimeVal {
+    switch (operator) {
+        case '&&':
+            return MK_BOOL((lhs as BoolVal).value && (rhs as BoolVal).value);
+        case '|':
+            return MK_BOOL((lhs as BoolVal).value || (rhs as BoolVal).value);
+        case '!=':
+            return MK_BOOL((lhs as BoolVal).value != (rhs as BoolVal).value);
+        case '==':
+            return MK_BOOL((lhs as BoolVal).value == (rhs as BoolVal).value);
+        default:
+            throw `Bad operator provided in operation`
+    }
 }
 
 export function eval_numeric_binary_expr(lhs: RuntimeVal, rhs: RuntimeVal, operator: string): RuntimeVal {

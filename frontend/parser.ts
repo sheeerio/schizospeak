@@ -301,7 +301,7 @@ import {
         }
         let left = this.parse_multiplicitave_expr();
 
-        while (["+", "-", "==", "!=", "<", ">", "<=", ">="].includes(this.at().value)) {
+        while (["+", "-", "==", "!=", "<", ">", "<=", ">=", "&&", "|"].includes(this.at().value)) {
             const operator = this.eat().value;
             const right = this.parse_multiplicitave_expr();
             left = {

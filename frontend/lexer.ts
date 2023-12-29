@@ -33,6 +33,7 @@ export enum TokenType {
     OpenBracket,    // [
     CloseBracket,   // ]
     Semicolon,
+    Ampersand,
     EOF,
 }
 
@@ -143,6 +144,15 @@ export function tokenize (sourceCode: string): Token[] {
         }
         else if (src[0] == '|')
             tokens.push(token(src.shift(), TokenType.Bar));
+        else if (src[0] == '&') {
+            src.shift();
+            if (String(src[0]) == '&') {
+                src.shift()
+                tokens.push(token("&&", TokenType.And));
+            } else {
+                tokens.push(token("&", TokenType.Ampersand));
+            }
+        }
         else if (src[0] == '"') {
             tokens.push(token(src.shift(), TokenType.Quote));
             while (src[0] !== '"')

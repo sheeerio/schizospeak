@@ -22,7 +22,7 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
         case "ObjectLiteral":
             return eval_object_expr(astNode as ObjectLiteral, env);
         case "CallExpr":
-                return eval_call_expr(astNode as CallExpr, env);
+            return eval_call_expr(astNode as CallExpr, env);
         case "AssignmentExpr":
             return eval_assignment(astNode as AssignmentExpr, env);
         case "BinaryExpr":
