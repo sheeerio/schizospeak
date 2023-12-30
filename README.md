@@ -53,24 +53,44 @@ true != false  # result: true
 ### Member Expressions
 
 ## Declarations
-There are two declaration keywords: `let` and `const`, where `let` allows re-assignment of assigned identifier and `const` does not. Note that both keywords 
+Declarations encompass variable, function, if, and for declarations. All declarations are subtypes of statements and include a specific keyword. The heirarchy is constant across all types:
+```
+Declarations
+    |   Variable Declaration
+    |   Function Declaration
+    |   If Declaration
+    |   For Declaration
+```
+### Variable Declaration
+There are two variable declaration keywords: `let` and `const`, where `let` allows re-assignment of assigned identifier and `const` does not. Note that both keywords 
 disallow re-assignments involving the same keywords.
 
-The following are all valid assignments: 
+The following are all valid declarations: 
 ```
 let x = (obj.x + foo(12)) % 4;
 let y = (12 / 4) * 3 % 7;
 const z = -foo(obj.x);
 ```
-The following are invalid assignments:
+The following are invalid declarations:
 ```
 let x = 3;
 let x = 4;
 const y = 4;
 y = 7;
 ```
-### Variable Declaration
 ### Function Declaration
+`fn` keyword allows declaration of functions. The functions arguments support both `args` and `kwargs`. There is no return keyword, instead typing out the variable name at the end works just the same as `return "var"`.
+
+Functions can also be returned by other functions:
+```
+fn makeAdder(offset) {
+    fn add(x, y) {
+        x + y + offset
+    }
+
+    add
+}
+```
 ### If Declaration
 ### For Declaration
 

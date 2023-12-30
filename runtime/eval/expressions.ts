@@ -15,7 +15,7 @@ export function eval_binary_expr(
     else if (lhs.type == "boolean" && rhs.type == "boolean")
         return eval_bool_binary_expr(lhs, rhs, binop.operator)
     // One or both are null
-    return MK_NULL();
+    return MK_NULL()
 }
 
 export function eval_bool_binary_expr(lhs: RuntimeVal, rhs: RuntimeVal, operator: string): RuntimeVal {

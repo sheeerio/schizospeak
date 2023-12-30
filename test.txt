@@ -14,7 +14,7 @@ print(foo, 132)
 const timeNow = time();
 print(timeNow)
 
-fn makeAdder(offset) {
+fn makeAdder(offset, i) {
     fn add(x, y) {
         x + y + offset
     }
