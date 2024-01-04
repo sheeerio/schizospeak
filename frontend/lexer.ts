@@ -1,5 +1,5 @@
 // Let x = 46 + (foo * bar)
-
+import process from 'node:process';
 export enum TokenType {
     String,
     Number,
@@ -186,7 +186,7 @@ export function tokenize (sourceCode: string): Token[] {
                 src.shift(); // SKIP THE CURRENT CHARACTER
             } else {
                 console.log("Unrecognized character found in source: ", src[0]);
-                Deno.exit(1);
+                process.exit(1);
             }
 
         }

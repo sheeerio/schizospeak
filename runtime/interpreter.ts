@@ -3,7 +3,7 @@ import {AssignmentExpr, BinaryExpr, CallExpr, ForDeclaration, FunctionDeclaratio
 import Environment from "./environment.ts";
 import { eval_identifier, eval_binary_expr, eval_assignment, eval_object_expr, eval_call_expr, eval_member_expr } from "./eval/expressions.ts";
 import { eval_for_declaration, eval_function_declaration, eval_if_declaration, eval_program, eval_var_declaration } from "./eval/statements.ts";
-
+import process from 'node:process';
 
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
     switch (astNode.kind) {
@@ -41,6 +41,6 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
             return eval_member_expr(env, astNode as MemberExpr);
         default:
             console.error("This AST Node has not yet been setup for interpretation.", astNode);
-            Deno.exit(1);       
+            process.exit(1);       
     }
 }
