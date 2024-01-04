@@ -66,8 +66,8 @@ export function eval_for_declaration(declaration: ForDeclaration, env: Environme
     if ((cond as BoolVal).value !== true) return MK_NULL(); // The loop didn't start
 
     do {
-        eval_assignment(step, env);
         eval_body(body, new Environment(env), false);
+        eval_assignment(step, env);
 
         cond = evaluate(declaration.cond, env);
     } while ((cond as BoolVal).value);

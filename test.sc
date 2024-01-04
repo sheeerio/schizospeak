@@ -1,4 +1,4 @@
-let foo be 9 * 5 innit
+let foo = 9 * 5;
 print(foo - 23)
 const obj = {
     x: 100,
