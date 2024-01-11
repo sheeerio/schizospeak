@@ -1,35 +1,22 @@
-cuh meow be zesty init
-cuh what be sus init
-yeet (meow bet what)
-yeet (meow cap what)
-yeet (meow opp what)
+first x is zesty
+ok
 
-ayo(cuh x be 0 init x lowkey 10 init x be x+1) {
-    yeet(x)
-}
+what about x? perfect
 
-mfw makeAdder(offset, i) {
-    mfw add(x, y) {
-        x + y + offset
-    }
+first z is 10 ok
 
-    add
-}
+so let's also say that y is z+4 ok
 
-cuh x be 4;
-ight adder = makeAdder(3);
-yeet(adder(5,5))
+now x is "bruhv"
 
-weball(x highkey 0) {
-    weball(x lowkey 4) {
-        yeet("x is less than 4 and positive")
-    } fuckit weball (x bet 4) {
-        print("x is equal to 4")
-    } fuckit {
-        yeet("x is greater than 4")
-    }
-} fuckit weball (x bet 0) {
-    yeet("x is equal to 0")
-} fuckit {
-    yeet("x is negative")
-}
+what about x
+nice
+
+what about y
+perfect
+
+what about "hello world"
+perfect
+
+now loop from 1 uptil 10 stepping normally and what about i ? nice
+run

@@ -144,6 +144,8 @@ export function tokenize (sourceCode: string): Token[] {
         }
         else if (src[0] == '|')
             tokens.push(token(src.shift(), TokenType.Bar));
+        else if (src[0] == '?')
+            src.shift();
         else if (src[0] == '&') {
             src.shift();
             if (String(src[0]) == '&') {

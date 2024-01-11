@@ -89,7 +89,7 @@ import {
         const cond = this.parse_expr();
         this.expect(TokenType.Semicolon, "Expected semicolon after initialization in \"for\" declaration");
         const step = this.parse_assignment_expr();
-        this.expect(TokenType.CloseParen, "Closing parenthesis (\"(\") expected following \"for\" statement.");
+        this.expect(TokenType.CloseParen, "Closing parenthesis (\")\") expected following \"for\" statement.");
         const body = this.parse_block_statement();
 
         return {
@@ -124,7 +124,7 @@ import {
         this.eat();
         this.expect(TokenType.OpenParen, "Expected open parenthesis (\"(\") expected following \"if\" keyword.");
         const cond = this.parse_expr();
-        this.expect(TokenType.CloseParen, "Closing parenthesis (\"(\") expected following \"if\" statement.");
+        this.expect(TokenType.CloseParen, "Closing parenthesis (\")\") expected following \"if\" statement.");
         const body = this.parse_block_statement();
 
         let alternate: Stmt[];
