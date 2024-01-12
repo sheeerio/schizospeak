@@ -92,7 +92,13 @@ fn makeAdder(offset) {
 }
 ```
 ### If Declaration
+The 
+
 ### For Declaration
+The `for` keyword allows for for statement declarations. The statement requires the following:
+- initialization: typically a variable instantiation using the `let` keyword. Note that the initialization supports any type of variable instantiation (int, bool, float, etc.).
+- condition:typically a boolean expression
+- step: a binary expression, including but not limited to all boolean and integer expressions.
 
 ## Identifier
 

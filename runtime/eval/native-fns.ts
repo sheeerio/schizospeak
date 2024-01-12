@@ -8,6 +8,11 @@ export function printValues(args: Array<RuntimeVal>) {
     }
 }
 
+export function lenValues(args: Array<RuntimeVal>) {
+    const arg = args[0];
+    if (arg.type == "string") return (arg as StringVal).value.length;
+}
+
 export function matchType(arg: RuntimeVal) {
     switch (arg.type) {
         case "string":

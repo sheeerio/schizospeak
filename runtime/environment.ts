@@ -1,6 +1,6 @@
 import { MemberExpr, Identifier } from "../frontend/ast.ts";
-import { printValues } from "./eval/native-fns.ts";
-import { MK_BOOL, MK_NULL, MK_NATIVE_FN, RuntimeVal, MK_NUMBER, ObjectVal } from "./values.ts";
+import { printValues, lenValues } from "./eval/native-fns.ts";
+import { MK_BOOL, MK_NULL, MK_NATIVE_FN, RuntimeVal, MK_NUMBER, ObjectVal, StringVal } from "./values.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -23,6 +23,9 @@ export function createGlobalEnv() {
         return MK_NUMBER(Date.now());
     }
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
+    env.declareVar("len", MK_NATIVE_FN((args) => {
+        return MK_NUMBER(lenValues(args));
+    }), true);
     
     return env;
 }

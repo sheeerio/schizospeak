@@ -32,6 +32,7 @@ export async function transcribe(code: string) {
         .replace_fr("first", 'let')
         .replace_fr("let's say that", 'let')
         .replace_fr("let's also say that", 'let')
+        .replace_fr("new line", '"\n"')
         .replace_fr("let's print", 'print(')
         .replace_fr("ight", 'const')
         .replace_fr("nice", ')')
