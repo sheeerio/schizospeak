@@ -79,7 +79,7 @@ const y = 4;
 y = 7;
 ```
 ### Function Declaration
-`fn` keyword allows declaration of functions. The functions arguments support both `args` and `kwargs`. There is no return keyword, instead typing out the variable name at the end works just the same as `return "var"`.
+`fn` keyword allows declaration of functions. The functions arguments support both `args` and `kwargs`. There is no return keyword-- typing out `var` at the end of the function works just the same as `return "var"`.
 
 Functions can also be returned by other functions:
 ```
@@ -92,13 +92,36 @@ fn makeAdder(offset) {
 }
 ```
 ### If Declaration
-The 
+The `if` keyword allows declaration of if-statements. 
+
+```
+if (x > 4) {
+    \\ do this if x > 4
+} else if (x < 2) {
+    \\ do this is x < 2
+} else {
+    \\ else do this
+}
+```
 
 ### For Declaration
-The `for` keyword allows for for statement declarations. The statement requires the following:
+The `for` keyword allows for for-statement declarations. The statement requires the following:
 - initialization: typically a variable instantiation using the `let` keyword. Note that the initialization supports any type of variable instantiation (int, bool, float, etc.).
-- condition:typically a boolean expression
+- condition: typically a boolean expression
 - step: a binary expression, including but not limited to all boolean and integer expressions.
+
+**Remark:** The condition check is performed before the execution of the body.
+
+The following declarations are valid:
+```
+for (let i = 0; i<10; i=i+1) {
+    print(i)
+}
+
+for (let x = true; x != true; x = !x) {
+    print("This doesn't run!")
+}
+```
 
 ## Identifier
 

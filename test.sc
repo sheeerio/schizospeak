@@ -2,14 +2,17 @@ let foo = 9 * 5;
 print(foo - 23)
 const obj = {
     x: 100,
-    y: "32",
+    y: "woof",
     foo,
     complex: {
         bar: true,
     },
 };
+let x = 1;
 
-print(obj.complex.bar)
+print("obj[y]:", obj[y])
+let um = [1, 2];
+print("um[1]:", um[1])
 
 print(foo, 132)
 const timeNow = time();

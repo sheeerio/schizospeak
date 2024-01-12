@@ -246,9 +246,33 @@ import {
         return left;
     }
 
+    private parse_array_expr(): Expr {
+        this.eat(); // advance past open bracket.
+        const elements = new Array<Property>();
+        let index = 0;
+        while (this.not_eof() && this.at().type != TokenType.CloseBracket) {
+            const element = this.parse_expr();
+            elements.push({key: index.toString(), kind:"Property", value: element});
+            index += 1;
+            if (this.at().type != TokenType.CloseBracket) {
+                this.expect(
+                TokenType.Comma,
+                "Expected comma or closing bracket following element"
+                );
+            }
+        }
+        this.expect(
+            TokenType.CloseBracket,
+            "Array Expression missing closing bracket."
+        );
+        return { kind: "ObjectLiteral", properties: elements } as ObjectLiteral;
+    }
+
     private parse_object_expr(): Expr {
         // { Prop[] }
-        if (this.at().type !== TokenType.OpenBrace) {
+        if (this.at().type == TokenType.OpenBracket) {
+            return this.parse_array_expr();
+        } else if (this.at().type !== TokenType.OpenBrace) {
             return this.parse_additive_expr();
         }
 
@@ -401,39 +425,38 @@ import {
         let object = this.parse_primary_expr();
 
         while (
-        this.at().type == TokenType.Dot ||
-        this.at().type == TokenType.OpenBracket
-        ) {
-        const operator = this.eat();
-        let property: Expr;
-        let computed: boolean;
+            this.at().type == TokenType.Dot ||
+            this.at().type == TokenType.OpenBracket
+            ) {
+            const operator = this.eat();
+            let property: Expr;
+            let computed: boolean;
 
-        // non-computed values aka obj.expr
-        if (operator.type == TokenType.Dot) {
-            computed = false;
-            // get identifier
-            property = this.parse_primary_expr();
-            if (property.kind != "Identifier") {
-            throw `Cannonot use dot operator without right hand side being a identifier`;
+            // non-computed values aka obj.expr
+            if (operator.type == TokenType.Dot) {
+                computed = false;
+                // get identifier
+                property = this.parse_primary_expr();
+                if (property.kind != "Identifier") {
+                throw `Cannonot use dot operator without right hand side being a identifier`;
+                }
+            } else {
+                // this allows obj[computedValue]
+                computed = true;
+                property = this.parse_expr();
+                this.expect(
+                TokenType.CloseBracket,
+                "Missing closing bracket in computed value."
+                );
             }
-        } else {
-            // this allows obj[computedValue]
-            computed = true;
-            property = this.parse_expr();
-            this.expect(
-            TokenType.CloseBracket,
-            "Missing closing bracket in computed value."
-            );
-        }
 
-        object = {
-            kind: "MemberExpr",
-            object,
-            property,
-            computed,
-        } as MemberExpr;
+            object = {
+                kind: "MemberExpr",
+                object,
+                property,
+                computed,
+            } as MemberExpr;
         }
-
         return object;
     }
 

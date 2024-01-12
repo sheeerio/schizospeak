@@ -167,8 +167,13 @@ export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
 
         return result;
     }
-
     throw "Cannot call value that is not a function: " + JSON.stringify(fn);
+}
+
+function isNumber(str: string): boolean {
+    // Use the unary plus operator to convert the string to a number
+    // If the result is NaN, then the string is not a number
+    return !isNaN(+str);
 }
 
 export function eval_member_expr(env: Environment, expr?: MemberExpr, node?: AssignmentExpr): RuntimeVal {
@@ -180,7 +185,7 @@ export function eval_member_expr(env: Environment, expr?: MemberExpr, node?: Ass
         const variable = env.lookupOrMutObject(
             node.assigne as MemberExpr, 
             evaluate(node.value, env)
-            );
+        );
 
         return variable;
     } else {
