@@ -1,8 +1,13 @@
 # Schizospeak
 > Schizospeak is an ongoing project
 
-Schizospeak is an interface to create esoteric programming languages such as [LOLCODE](https://en.wikipedia.org/wiki/LOLCODE) and [Shakespeare](https://en.wikipedia.org/wiki/Shakespeare_Programming_Language).
-Currently, all syntactical rules are due for changes. Lexical morphology is a low priorty as that only includes replacement of current words with the new semantics.
+## Installation
+Go to [this website](https://www.npmjs.com/package/schizospeak) and download manually or in the terminal execute the following command:
+```
+> npm i schizospeak
+```
+
+Schizospeak is an esoteric programming language such as [LOLCODE](https://en.wikipedia.org/wiki/LOLCODE) and [Shakespeare](https://en.wikipedia.org/wiki/Shakespeare_Programming_Language). Currently, all syntactical rules are due for changes. Lexical morphology is a low priorty as that only includes replacement of current words with the new semantics.
 
 ## Components
 Schizospeak incorporates the following:
@@ -11,7 +16,7 @@ Schizospeak incorporates the following:
 3. Interpreter : Uses the AST to return a Runtime value
 
 # Usage
-Currently, the syntax of the language is mostly inspired by JavaScript with hints of Python and C.
+The syntax of the language is mostly inspired by JavaScript with hints of Python and C.
 
 ## Expressions
 Expressions in Schizospeak incorporate Assignment, Binary, Call, and Member expressions. These expressions are a subset of statements and the hierarchy follows like so:
