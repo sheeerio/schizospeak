@@ -124,8 +124,17 @@ for (let x = true; x != true; x = !x) {
 ```
 
 ## Identifier
+Identifiers are strings that have special use (`variables`, `native functions`). Identifiers starting with numbers or including special characters (`$,%,*,(,),{,},[,]`) are invalid.
 
 ## Literals
 ### Numeric Literal
+Classic numerals.
 ### String Literal
+Classic strings.
 ### Object Literal
+An object literal can be created by using the `{}` parentheses and supports three types of input:
+1. `{key}`
+2. `{key: value}`
+3. `{key,}`
+
+Note that objects are self-recursive, therefore one can use objects in place of values as well.
