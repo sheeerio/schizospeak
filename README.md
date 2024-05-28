@@ -1,5 +1,5 @@
 # Schizospeak
-> Schizospeak is an ongoing project
+> The development of Schizospeak is currently paused until further notice.
 
 ## Installation
 Go to [this website](https://www.npmjs.com/package/schizospeak) and download manually or in the terminal execute the following command:
